@@ -1,1 +1,146 @@
-да ч пидор ода пенис
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<title>xiner</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --fg: #c9d1d9;
+    --accent: #58a6ff;
+    --green: #3fb950;
+    --dim: #6e7681;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family:"JetBrains Mono", "Courier New", Consolas, monospace;
+    margin: 0;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .terminal {
+    max-width: 640px;
+    width: 100%;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    background: #161b22;
+    box-shadow: 0 0 0 1px #21262d, 0 8px 24px rgba(0,0,0,0.5);
+    overflow: hidden;
+  }
+
+  .titlebar {
+    background: #21262d;
+    padding: 10px 14px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .dot.red { background: #ff5f56; }
+  .dot.yellow { background: #ffbd2e; }
+  .dot.green { background: #27c93f; }
+
+  .titlebar span {
+    margin-left: 10px;
+    color: var(--dim);
+    font-size: 13px;
+  }
+
+  .body {
+    padding: 24px 28px 32px;
+    line-height: 1.6;
+    font-size: 15px;
+  }
+
+  .prompt { color: var(--green); }
+  .path { color: var(--accent); }
+
+  h1 {
+    font-size: 22px;
+    color: #f0f6fc;
+    margin: 18px 0 6px;
+  }
+
+  .comment { color: var(--dim); }
+
+  .code {
+    margin: 16px 0;
+    padding: 14px 16px;
+    background: #0d1117;
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    font-size: 13.5px;
+    overflow-x: auto;
+    white-space: pre;
+    color: #79c0ff;
+  }
+
+  .code .kw { color: #ff7b72; }
+  .code .str { color: #a5d6ff; }
+  .code .com { color: var(--dim); }
+
+  img.profile {
+    display: block;
+    max-width: 100%;
+    border-radius: 6px;
+    border: 1px solid #30363d;
+    margin: 18px 0;
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 8px;
+    height: 1em;
+    background: var(--fg);
+    vertical-align: text-bottom;
+    animation: blink 1s steps(1) infinite;
+  }
+
+  @keyframes blink { 50% { opacity: 0; } }
+
+  footer {
+    margin-top: 24px;
+    color: var(--dim);
+    font-size: 13px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="terminal">
+    <div class="titlebar">
+      <div class="dot red"></div>
+      <div class="dot yellow"></div>
+      <div class="dot green"></div>
+      <span>xiner@desktop: ~</span>
+    </div>
+
+    <div class="body">
+      <p><span class="prompt">$</span> <span class="path">whoami</span></p>
+      <h1>xiner</h1>
+      <p class="comment">// ыы-ы мильстрой </p>
+      
+      <img class="profile" src="photo.jpg" alt="моя фотка">
+
+      <div class="code"><span class="com">#include &lt;iostream&gt;</span>
+<span class="kw">int</span> main() {
+    std::cout << <span class="str">"Я обкурыш btw\n"</span>;
+    <span class="kw">return</span> <span class="str">0</span>;
+}</div>
+
+      <p><span class="prompt">$</span> <span class="cursor"></span></p>
+    </div>
+  </div>
+
+  <footer style="position: fixed; bottom: 10px; left: 0; right: 0; text-align: center;"></footer>
+
+</body>
+</html>
