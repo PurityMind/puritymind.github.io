@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Σύνεσις (or zord) — Start</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* ==========================================================================
+       AUTHENTIC MICROSOFT METRO UI (WINDOWS 8.1 / WINDOWS PHONE 8.1) STYLESHEET
+       ========================================================================== */
+    :root {
+      --metro-bg: #180028;
+      --metro-bg-secondary: #240938;
+      --metro-accent: #00aba9;
+      --metro-accent-dark: #008280;
+      --metro-tile-opacity: 1;
+      --metro-font: 'Segoe UI', 'Segoe WP', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: var(--metro-font);
+      background-color: var(--metro-bg);
+      color: #ffffff;
+      overflow-x: hidden;
+      min-height: 100vh;
+      transition: background-color 0.45s cubic-bezier(0.1, 0.9, 0.2, 1);
+    }
+
+    /* Typography - Iconic Segoe UI Light / Semilight weights */
+    .metro-title {
+      font-weight: 200;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+    }
+
+    .metro-group-header {
+      font-weight: 300;
+      font-size: 1.35rem;
+      letter-spacing: 0.01em;
+      color: rgba(255, 255, 255, 0.88);
+      margin-bottom: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s ease;
+    }
+
+    .metro-group-header:hover {
+      color: #ffffff;
+    }
+
+    /* Authentic Metro Tile Base */
+    .metro-tile {
+      position: relative;
+      border-radius: 0px !important; /* Strict Metro 0px sharp geometry */
+      overflow: hidden;
+      cursor: pointer;
+      transform-style: preserve-3d;
+      will-change: transform;
+      transition:
+        transform 0.16s cubic-bezier(0.1, 0.9, 0.2, 1),
+        box-shadow 0.16s ease,
+        background-color 0.35s ease,
+        opacity 0.25s ease;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+      display: block;
+      text-decoration: none;
+      color: #ffffff;
+    }
+
+    /* Crisp Metro Hover Outline */
+    .metro-tile:hover {
+      box-shadow:
+        inset 0 0 0 2px rgba(255, 255, 255, 0.48),
+        0 10px 25px rgba(0, 0, 0, 0.32);
+      z-index: 10;
+    }
+
+    .metro-tile:active {
+      box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.75);
+    }
+
+    /* Subtle Metro Top-Left Diagonal Sheen */
+    .metro-tile::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.13) 0%,
+        rgba(255, 255, 255, 0.02) 45%,
+        rgba(0, 0, 0, 0.12) 100%
+      );
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* Tile Label in bottom-left corner */
+    .metro-tile-label {
+      position: absolute;
+      bottom: 8px;
+      left: 12px;
+      right: 12px;
+      font-size: 0.82rem;
+      font-weight: 400;
+      letter-spacing: 0.01em;
+      line-height: 1.2;
+      color: #ffffff;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+      pointer-events: none;
+    }
+
+    /* Live Tile Slide Container */
+    .live-tile-track {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transition: transform 0.65s cubic-bezier(0.1, 0.9, 0.2, 1);
+    }
+
+    .live-tile-face {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Authentic Metro Colors */
+    .tile-cobalt   { background-color: rgba(0, 80, 239, var(--metro-tile-opacity)); }
+    .tile-indigo   { background-color: rgba(106, 0, 255, var(--metro-tile-opacity)); }
+    .tile-violet   { background-color: rgba(170, 0, 255, var(--metro-tile-opacity)); }
+    .tile-teal     { background-color: rgba(0, 171, 169, var(--metro-tile-opacity)); }
+    .tile-cyan     { background-color: rgba(27, 161, 226, var(--metro-tile-opacity)); }
+    .tile-emerald  { background-color: rgba(0, 138, 0, var(--metro-tile-opacity)); }
+    .tile-crimson  { background-color: rgba(162, 0, 37, var(--metro-tile-opacity)); }
+    .tile-amber    { background-color: rgba(240, 163, 10, var(--metro-tile-opacity)); }
+    .tile-orange   { background-color: rgba(250, 104, 0, var(--metro-tile-opacity)); }
+    .tile-steel    { background-color: rgba(100, 118, 135, var(--metro-tile-opacity)); }
+    .tile-dark     { background-color: rgba(29, 29, 29, var(--metro-tile-opacity)); }
+    .tile-accent   { background-color: var(--metro-accent); }
+
+    /* Unified WP8 Accent Mode Override */
+    body.unified-accent .metro-tile:not(.tile-photo) {
+      background-color: var(--metro-accent) !important;
+    }
+
+    /* Translucent WP8.1 Glass / Acrylic Tile Mode */
+    body.glass-tiles .metro-tile:not(.tile-photo) {
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      --metro-tile-opacity: 0.72;
+    }
+    body.glass-tiles.unified-accent .metro-tile:not(.tile-photo) {
+      background-color: color-mix(in srgb, var(--metro-accent) 72%, transparent) !important;
+    }
+
+    /* Metro Circle Icon Button (Down Arrow / Back Arrow) */
+    .metro-circle-btn {
+      width: 42px;
+      height: 42px;
+      border: 2px solid rgba(255, 255, 255, 0.78);
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .metro-circle-btn:hover {
+      background: #ffffff;
+      color: #111111;
+      border-color: #ffffff;
+      transform: scale(1.05);
+    }
+
+    .metro-circle-btn:active {
+      transform: scale(0.94);
+    }
+
+    /* Featured Photo Ken Burns Subtle Motion */
+    @keyframes metroPhotoPan {
+      0%   { transform: scale(1.04) translate(0, 0); }
+      50%  { transform: scale(1.12) translate(-2%, -2%); }
+      100% { transform: scale(1.04) translate(0, 0); }
+    }
+
+    .metro-photo-anim {
+      animation: metroPhotoPan 16s ease-in-out infinite;
+    }
+
+    /* Windows 8.1 Start Screen Panorama vs All Apps Vertical Transition */
+    #metro-viewport {
+      transition: transform 0.65s cubic-bezier(0.1, 0.9, 0.2, 1);
+    }
+
+    body.show-all-apps #start-screen-section {
+      display: none;
+    }
+
+    body:not(.show-all-apps) #all-apps-section {
+      display: none;
+    }
+
+    /* Entrance Animation for Tiles (Windows 8.1 Start Swoop) */
+    @keyframes metroStartSwoop {
+      0% {
+        opacity: 0;
+        transform: translateX(60px) scale(0.94);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+      }
+    }
+
+    .swoop-in {
+      animation: metroStartSwoop 0.55s cubic-bezier(0.1, 0.9, 0.2, 1) backwards;
+    }
+
+    /* Windows Phone 8.1 Frame Styling when toggled */
+    body.wp8-mode #start-container {
+      max-width: 460px;
+      margin: 1.5rem auto;
+      border: 10px solid #141414;
+      outline: 2px solid rgba(255, 255, 255, 0.16);
+      background: rgba(0, 0, 0, 0.48);
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.75);
+      min-height: 840px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    body:not(.wp8-mode) .wp8-only {
+      display: none !important;
+    }
+
+    body.wp8-mode .win8-only {
+      display: none !important;
+    }
+
+    /* Custom Scrollbar in Metro Style */
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.25);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.35);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    /* Search Highlight Dimming */
+    .metro-tile.tile-dimmed {
+      opacity: 0.16 !important;
+      filter: grayscale(85%);
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body class="relative selection:bg-teal-500 selection:text-white">
+
+  <!-- ========================================================================
+       BACKGROUND ARTWORK LAYER (Authentic Windows 8.1 Geometric Vectors)
+       ======================================================================== -->
+  <div id="bg-artwork" class="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-45">
+    <svg class="w-full h-full" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="win8Grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.12" />
+          <stop offset="50%" stop-color="#00aba9" stop-opacity="0.08" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0.0" />
+        </linearGradient>
+        <linearGradient id="win8Grad2" x1="100%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#a20025" stop-opacity="0.14" />
+          <stop offset="100%" stop-color="#0050ef" stop-opacity="0.03" />
+        </linearGradient>
+      </defs>
+      <!-- Iconic Windows 8.1 Start Screen Abstract Angular Ribbons -->
+      <polygon points="-100,200 750,-100 1150,1180 -100,900" fill="url(#win8Grad1)" />
+      <polygon points="950,-100 2050,150 1550,1180 650,1180" fill="url(#win8Grad2)" />
+      <circle cx="1580" cy="220" r="340" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="45" />
+      <circle cx="1580" cy="220" r="210" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="20" />
+      <path d="M -50 780 L 1970 320" stroke="rgba(255,255,255,0.05)" stroke-width="2" />
+      <path d="M -50 820 L 1970 360" stroke="rgba(255,255,255,0.03)" stroke-width="12" />
+    </svg>
+  </div>
+
+  <!-- Right-edge invisible hot-corner trigger for Windows 8 Charms Bar -->
+  <div id="charms-hotcorner"
+       class="fixed top-0 right-0 w-3 h-full z-40 cursor-pointer"
+       title="Move cursor to right edge for Charms Bar"></div>
+
+  <!-- ========================================================================
+       MAIN VIEWPORT CONTAINER (Supports both Win 8.1 Desktop & WP 8.1 Lumia)
+       ======================================================================== -->
+  <div id="start-container" class="relative z-10 min-h-screen flex flex-col justify-between transition-all duration-300">
+
+    <!-- WINDOWS PHONE 8.1 TOP STATUS BAR (Visible in WP8.1 mode) -->
+    <div class="wp8-only px-4 py-1.5 flex items-center justify-between text-xs font-semibold tracking-wider text-white/90 bg-black/50 border-b border-white/10">
+      <div class="flex items-center gap-2">
+        <span class="tracking-widest">▄▆█</span>
+        <span>ZORD-SYS</span>
+        <span class="text-[10px] px-1 bg-white/20">5G</span>
+      </div>
+      <div class="flex items-center gap-2.5">
+        <span id="wp8-live-indicator" class="w-2 h-2 bg-emerald-400 inline-block" title="Live Tiles Active"></span>
+        <span>🔋 98%</span>
+        <span id="wp8-clock">12:00</span>
+      </div>
+    </div>
+
+    <!-- ======================================================================
+         SECTION 1: START SCREEN (WINDOWS 8.1 / WP 8.1 LIVE TILES)
+         ====================================================================== -->
+    <main id="start-screen-section" class="flex-1 flex flex-col justify-between px-5 sm:px-10 lg:px-16 pt-6 sm:pt-10 pb-8">
+
+      <!-- TOP HEADER BAR: "Start" + User Profile Badge (Σύνεσις / or zord) -->
+      <header class="flex flex-wrap items-center justify-between gap-4 mb-7 sm:mb-10">
+        <!-- Left: Start Title -->
+        <div class="flex items-baseline gap-4">
+          <h1 id="main-screen-title"
+              class="metro-title text-4xl sm:text-6xl text-white tracking-tight cursor-pointer hover:opacity-85 transition-opacity"
+              onclick="cycleHeaderTitle()"
+              title="Click to toggle header between 'Start' and 'Σύνεσις'">
+            Start
+          </h1>
+          <span class="text-sm sm:text-base font-light text-white/60 tracking-wide">
+            // Σύνεσις <span class="text-white/40">(or zord)</span>
+          </span>
+        </div>
+
+        <!-- Right: Controls + Authentic Windows 8.1 User Tile -->
+        <div class="flex items-center gap-3 sm:gap-5">
+          <!-- Quick Search Input (Metro Inline Filter) -->
+          <div class="relative hidden md:flex items-center">
+            <input id="quick-search-input"
+                   type="text"
+                   placeholder="Type to search tiles..."
+                   oninput="filterTiles(this.value)"
+                   class="bg-white/10 hover:bg-white/15 focus:bg-white text-white focus:text-black placeholder-white/50 focus:placeholder-gray-500 text-sm px-3.5 py-1.5 w-48 lg:w-56 outline-none border border-white/25 focus:border-white transition-all" />
+            <button onclick="clearSearch()"
+                    id="clear-search-btn"
+                    class="hidden absolute right-2 text-xs text-gray-600 hover:text-black font-bold">✕</button>
+          </div>
+
+          <!-- Layout Mode Switcher: Win 8.1 vs WP 8.1 -->
+          <button onclick="toggleLayoutMode()"
+                  id="layout-mode-btn"
+                  class="px-3 py-1.5 text-xs sm:text-sm font-normal bg-white/10 hover:bg-white/25 border border-white/25 flex items-center gap-2 transition-colors"
+                  title="Switch between Windows 8.1 Panorama and Windows Phone 8.1 Lumia Column">
+            <span id="layout-mode-icon">💻</span>
+            <span id="layout-mode-text" class="hidden sm:inline">Win 8.1 View</span>
+          </button>
+
+          <!-- Personalize / Charms Trigger -->
+          <button onclick="toggleCharmsBar()"
+                  class="px-3 py-1.5 text-xs sm:text-sm font-normal bg-white/10 hover:bg-white/25 border border-white/25 flex items-center gap-1.5 transition-colors"
+                  title="Open Windows 8 Charms & Personalization">
+            <span>⚙</span>
+            <span class="hidden sm:inline">Charms</span>
+          </button>
+
+          <!-- Authentic Windows 8.1 Top-Right User Identity Widget -->
+          <div onclick="openProfileModal()"
+               class="flex items-center gap-3 pl-2 pr-1 py-1 hover:bg-white/10 cursor-pointer transition-colors group"
+               title="View Profile & Raw Markdown">
+            <div class="text-right leading-tight">
+              <div class="text-base sm:text-lg font-light text-white group-hover:underline">Σύνεσις</div>
+              <div class="text-xs font-normal text-white/65">or zord</div>
+            </div>
+            <div class="w-10 h-10 sm:w-11 sm:h-11 overflow-hidden border border-white/35 bg-neutral-800 shrink-0">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTT80dNlNLXB-fl7D-tVpbnG67cY92yjxDbz3D4sD8nx6xECYagnixSdRQ&s=10"
+                   alt="Σύνεσις avatar"
+                   onerror="this.src='https://placehold.co/100x100/180028/ffffff?text=zord'"
+                   class="w-full h-full object-cover" />
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- ====================================================================
+           METRO START SCREEN TILE GROUPS
+           ==================================================================== -->
+      <div id="tile-groups-wrapper"
+           class="my-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+
+        <!-- =================================.................................
+             GROUP 1: IDENTITY & ABOUT ME (4 Columns on Desktop)
+             ================================================================== -->
+        <section class="lg:col-span-4 swoop-in" style="animation-delay: 0.04s;">
+          <div class="metro-group-header">
+            <span>about me</span>
+            <span class="text-xs text-white/40 font-normal">// identity</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2.5 sm:gap-3">
+            <!-- WIDE TILE 1: IDENTITY / PROFILE BANNER -->
+            <div onclick="openProfileModal()"
+                 data-search="synesis zord profile identity developer low-level systems"
+                 class="metro-tile tile-indigo col-span-2 h-36 sm:h-40 p-4 flex flex-col justify-between">
+              <div class="flex items-start justify-between gap-3 relative z-10">
+                <div>
+                  <div class="text-xs uppercase tracking-widest text-white/70 font-semibold">System Architect // Profile</div>
+                  <h2 class="text-2xl sm:text-3xl font-light tracking-tight mt-0.5">Σύνεσις <span class="text-white/75 text-lg font-normal">(or zord)</span></h2>
+                </div>
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTT80dNlNLXB-fl7D-tVpbnG67cY92yjxDbz3D4sD8nx6xECYagnixSdRQ&s=10"
+                     alt="Σύνεσις"
+                     onerror="this.src='https://placehold.co/120x120/240938/ffffff?text=Z'"
+                     class="w-14 h-14 object-cover border border-white/30 shrink-0" />
+              </div>
+
+              <div class="relative z-10 text-xs sm:text-sm text-white/90 font-light leading-snug">
+                Low-level systems &amp; practical software engineering.
+              </div>
+
+              <div class="metro-tile-label">
+                <span>Profile Card</span>
+                <span class="text-[11px] opacity-75">Click to inspect ↗</span>
+              </div>
+            </div>
+
+            <!-- WIDE LIVE TILE 2: ABOUT ME (Exact Bullet Points from Markdown) -->
+            <div onclick="openProfileModal()"
+                 data-search="about me developer focused on low-level systems and building practical software hardware-level control c++ fasm c#"
+                 class="metro-tile tile-teal col-span-2 h-44 sm:h-48">
+              <div id="live-tile-about" class="live-tile-track">
+                <!-- Frame 1: Exact Both Bullets Overview -->
+                <div class="live-tile-face p-4 flex flex-col justify-between">
+                  <div class="space-y-2.5 relative z-10">
+                    <div class="inline-block px-2 py-0.5 text-[10px] uppercase tracking-widest bg-black/25 text-white/90 font-semibold">
+                      About Me // Overview
+                    </div>
+                    <ul class="space-y-2 text-xs sm:text-sm font-normal leading-relaxed text-white">
+                      <li class="flex items-start gap-2">
+                        <span class="text-white/75 font-bold mt-0.5">▪</span>
+                        <span>Developer focused on low-level systems and building practical software.</span>
+                      </li>
+                      <li class="flex items-start gap-2">
+                        <span class="text-white/75 font-bold mt-0.5">▪</span>
+                        <span>Exploring the intersection of hardware-level control (C++ / FASM) and modern application development (C#).</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="metro-tile-label">
+                    <span>About Me</span>
+                    <span class="text-[10px] uppercase tracking-wider opacity-80">Live Tile ●</span>
+                  </div>
+                </div>
+
+                <!-- Frame 2: Focus Highlight 1 + 2 -->
+                <div class="live-tile-face p-4 flex flex-col justify-between bg-black/20">
+                  <div class="space-y-2 relative z-10">
+                    <div class="text-[11px] font-mono uppercase tracking-widest text-teal-200">
+                      [01] Low-Level &amp; Practical Software
+                    </div>
+                    <p class="text-sm sm:text-base font-light leading-snug text-white">
+                      "Developer focused on low-level systems and building practical software."
+                    </p>
+                    <div class="pt-1 text-[11px] font-mono text-white/80">
+                      &gt; Ring 0..3 // Native performance // Minimal overhead
+                    </div>
+                  </div>
+                  <div class="metro-tile-label">
+                    <span>About Me — Systems Focus</span>
+                    <span class="text-[10px] font-mono">1 / 2</span>
+                  </div>
+                </div>
+
+                <!-- Frame 3: Focus Highlight 2 -->
+                <div class="live-tile-face p-4 flex flex-col justify-between bg-black/30">
+                  <div class="space-y-2 relative z-10">
+                    <div class="text-[11px] font-mono uppercase tracking-widest text-teal-200">
+                      [02] Hardware Control × Modern Apps
+                    </div>
+                    <p class="text-sm sm:text-base font-light leading-snug text-white">
+                      "Exploring the intersection of hardware-level control (C++ / FASM) and modern application development (C#)."
+                    </p>
+                    <div class="pt-1 text-[11px] font-mono text-white/80">
+                      &gt; ASM / C++20 / .NET Runtime
+                    </div>
+                  </div>
+                  <div class="metro-tile-label">
+                    <span>About Me — Architecture</span>
+                    <span class="text-[10px] font-mono">2 / 2</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- MEDIUM TILE 3: FEATURED PHOTO LIVE TILE -->
+            <div onclick="openPhotoModal()"
+                 data-search="photo image gallery artwork synesis zord featured"
+                 class="metro-tile tile-photo tile-dark col-span-2 h-44 sm:h-48 group">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTT80dNlNLXB-fl7D-tVpbnG67cY92yjxDbz3D4sD8nx6xECYagnixSdRQ&s=10"
+                   alt="Σύνεσις featured artwork"
+                   onerror="this.src='https://placehold.co/600x400/180028/ffffff?text=Synesis+%2F%2F+zord'"
+                   class="w-full h-full object-cover metro-photo-anim opacity-90 group-hover:opacity-100 transition-opacity" />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent pointer-events-none"></div>
+              <div class="absolute top-3 left-3 px-2 py-0.5 bg-black/60 text-[10px] uppercase tracking-widest text-white/90 border border-white/15">
+                Photos // Featured
+              </div>
+              <div class="metro-tile-label">
+                <span>Σύνεσις (or zord) — Featured Image</span>
+                <span class="text-xs opacity-80">🔍 View</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- =================================.................................
+             GROUP 2: TECH STACK (4 Columns on Desktop)
+             ================================================================== -->
+        <section class="lg:col-span-4 swoop-in" style="animation-delay: 0.12s;">
+          <div class="metro-group-header">
+            <span>tech stack</span>
+            <span class="text-xs text-white/40 font-normal">// 6 technologies</span>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-2.5 sm:gap-3">
+
+            <!-- 1. C++ (https://isocpp.org/) -->
+            <a href="https://isocpp.org/"
+               target="_blank"
+               rel="noopener noreferrer"
+               data-search="c++ cpp isocpp native low level systems programming language"
+               class="metro-tile tile-cobalt h-32 sm:h-36 p-4 flex flex-col items-center justify-center group">
+              <img src="https://cdn.jsdelivr.net/gh/glincker/thesvg@main/public/icons/c-plusplus/default.svg"
+                   alt="cpp"
+                   class="h-14 w-14 sm:h-16 sm:w-16 object-contain drop-shadow-md transition-transform duration-200 group-hover:scale-110 -mt-3" />
+              <div class="metro-tile-label">
+                <span class="font-medium">C++</span>
+                <span class="text-[10px] opacity-70">isocpp.org ↗</span>
+              </div>
+            </a>
+
+            <!-- 2. C# (https://learn.microsoft.com/en-us/dotnet/csharp/) -->
+            <a href="https://learn.microsoft.com/en-us/dotnet/csharp/"
+               target="_blank"
+               rel="noopener noreferrer"
+               data-search="c# csharp dotnet microsoft modern application development"
+               class="metro-tile tile-violet h-32 sm:h-36 p-4 flex flex-col items-center justify-center group">
+              <img src="https://cdn.jsdelivr.net/gh/glincker/thesvg@main/public/icons/csharp/default.svg"
+                   alt="cs"
+                   class="h-14 w-14 sm:h-16 sm:w-16 object-contain drop-shadow-md transition-transform duration-200 group-hover:scale-110 -mt-3" />
+              <div class="metro-tile-label">
+                <span class="font-medium">C#</span>
+                <span class="text-[10px] opacity-70">dotnet ↗</span>
+              </div>
+            </a>
+
+            <!-- 3. FASM (https://flatassembler.net/) with local media/FASM.png + automatic crisp SVG fallback -->
+            <a href="https://flatassembler.net/"
+               target="_blank"
+               rel="noopener noreferrer"
+               data-search="fasm flat assembler x86 x64 assembly hardware-level control"
+               class="metro-tile tile-crimson h-32 sm:h-36 p-4 flex flex-col items-center justify-center group">
+              <img src="media/FASM.png"
+                   alt="FASM"
+                   onerror="this.style.display='none'; document.getElementById('fasm-fallback-svg').classList.remove('hidden');"
+                   class="h-14 w-14 sm:h-16 sm:w-16 object-contain drop-shadow-md transition-transform duration-200 group-hover:scale-110 -mt-3" />
+              <!-- Crisp Inline SVG Fallback for FASM when media/FASM.png is not locally present -->
+              <div id="fasm-fallback-svg" class="hidden flex flex-col items-center justify-center -mt-3 transition-transform duration-200 group-hover:scale-110">
+                <svg class="w-14 h-14 sm:w-16 sm:h-16 text-white drop-shadow" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="6" y="6" width="52" height="52" stroke="currentColor" stroke-width="3.5" fill="rgba(0,0,0,0.22)"/>
+                  <path d="M16 20H34M16 20V44M16 31H30" stroke="currentColor" stroke-width="4" stroke-linecap="square"/>
+                  <text x="29" y="45" fill="currentColor" font-family="monospace" font-weight="bold" font-size="13">ASM</text>
+                  <circle cx="48" cy="18" r="3" fill="currentColor"/>
+                </svg>
+              </div>
+              <div class="metro-tile-label">
+                <span class="font-medium">FASM</span>
+                <span class="text-[10px] opacity-70">flatassembler.net ↗</span>
+              </div>
+            </a>
+
+            <!-- 4. NixOS (https://nixos.org) -->
+            <a href="https://nixos.org"
+               target="_blank"
+               rel="noopener noreferrer"
+               data-search="nixos linux declarative reproducible os"
+               class="metro-tile tile-cyan h-32 sm:h-36 p-4 flex flex-col items-center justify-center group">
+              <img src="https://cdn.jsdelivr.net/gh/glincker/thesvg@main/public/icons/nixos/default.svg"
+                   alt="nixos"
+                   class="h-14 w-14 sm:h-16 sm:w-16 object-contain drop-shadow-md transition-transform duration-200 group-hover:scale-110 -mt-3" />
+              <div class="metro-tile-label">
+                <span class="font-medium">NixOS</span>
+                <span class="text-[10px] opacity-70">nixos.org ↗</span>
+              </div>
+            </a>
+
+            <!-- 5. Sway (https://swaywm.org) -->
+            <a href="https://swaywm.org"
+               target="_blank"
+               rel="noopener noreferrer"
+               data-search="sway swaywm wayland tiling window manager"
+               class="metro-tile tile-amber h-32 sm:h-36 p-4 flex flex-col items-center justify-center group">
+              <img src="https://cdn.jsdelivr.net/gh/glincker/thesvg@main/public/icons/sway/default.svg"
+                   alt="sway"
+                   class="h-14 w-14 sm:h-16 sm:w-16 object-contain drop-shadow-md transition-transform duration-200 group-hover:scale-110 -mt-3" />
+              <div class="metro-tile-label">
+                <span class="font-medium">Sway</span>
+                <span class="text-[10px] opacity-70">swaywm.org ↗</span>
+              </div>
+            </a>
+
+            <!-- 6. Windows (https://microsoft.com/) -->
+            <a href="https://microsoft.com/"
+               target="_blank"
+               rel="noopener noreferrer"
+               data-search="windows 8 windows 10 microsoft os metro"
+               class="metro-tile tile-emerald h-32 sm:h-36 p-4 flex flex-col items-center justify-center group">
+              <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/windows8/windows8-original.svg"
+                   alt="windows 10"
+                   class="h-14 w-14 sm:h-16 sm:w-16 object-contain brightness-200 drop-shadow-md transition-transform duration-200 group-hover:scale-110 -mt-3" />
+              <div class="metro-tile-label">
+                <span class="font-medium">Windows</span>
+                <span class="text-[10px] opacity-70">microsoft.com ↗</span>
+              </div>
+            </a>
+
+          </div>
+        </section>
+
+        <!-- =================================.................................
+             GROUP 3: RAW AND EXPERIMENTAL PETPROJECTS (4 Columns on Desktop)
+             ================================================================== -->
+        <section class="lg:col-span-4 swoop-in" style="animation-delay: 0.20s;">
+          <div class="metro-group-header">
+            <span>raw and experimental petprojects</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2.5 sm:gap-3">
+
+            <!-- WIDE LIVE TILE 1: CppFetch (https://codeberg.org/zord/cppfetch) -->
+            <a href="https://codeberg.org/zord/cppfetch"
+               target="_blank"
+               rel="noopener noreferrer"
+               data-search="cppfetch codeberg fetch program written by me in c++ wip petprojects"
+               class="metro-tile tile-cobalt col-span-2 h-44 sm:h-48">
+              <div id="live-tile-cppfetch" class="live-tile-track">
+                <!-- Face 1: Project Info -->
+                <div class="live-tile-face p-4 sm:p-5 flex flex-col justify-between">
+                  <div class="relative z-10">
+                    <div class="flex items-center justify-between">
+                      <span class="px-2 py-0.5 text-[10px] font-mono uppercase tracking-widest bg-black/30 text-white/90">
+                        Codeberg // C++ (WIP)
+                      </span>
+                      <span class="text-xs font-mono text-white/80">zord/cppfetch</span>
+                    </div>
+                    <h3 class="text-2xl sm:text-3xl font-light mt-2 tracking-tight">CppFetch</h3>
+                    <p class="text-xs sm:text-sm text-white/90 font-normal mt-1.5 leading-relaxed">
+                      *fetch program written by me in C++ (WIP)
+                    </p>
+                  </div>
+                  <div class="metro-tile-label">
+                    <span>CppFetch</span>
+                    <span class="text-[11px] opacity-85">codeberg.org/zord/cppfetch ↗</span>
+                  </div>
+                </div>
+
+                <!-- Face 2: Simulated CLI Fetch Preview -->
+                <div class="live-tile-face p-4 sm:p-5 flex flex-col justify-between bg-neutral-950/80 font-mono">
+                  <div class="text-[11px] sm:text-xs leading-relaxed text-teal-300 relative z-10">
+                    <div class="text-white/60">$ ./cppfetch</div>
+                    <div class="mt-1 grid grid-cols-12 gap-2 items-center">
+                      <pre class="col-span-4 text-[10px] leading-tight text-cyan-400">
+  /\  /\
+ /  \/  \
+ \      /
+  \____/</pre>
+                      <div class="col-span-8 text-[11px] space-y-0.5 text-white/90">
+                        <div><span class="text-cyan-400">user</span>: synesis@zord</div>
+                        <div><span class="text-cyan-400">os</span>: NixOS / SwayWM</div>
+                        <div><span class="text-cyan-400">lang</span>: C++ / FASM / C#</div>
+                        <div><span class="text-cyan-400">repo</span>: zord/cppfetch</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="metro-tile-label font-sans">
+                    <span>CppFetch — CLI Preview</span>
+                    <span class="text-[11px] opacity-90">Open Repository ↗</span>
+                  </div>
+                </div>
+              </div>
+            </a>
+
+            <!-- WIDE LIVE TILE 2: MyCat (https://codeberg.org/zord/mycat.git) -->
+            <a href="https://codeberg.org/zord/mycat.git"
+               target="_blank"
+               rel="noopener noreferrer"
+               data-search="mycat codeberg analog of cat in unix-like systems written by me on c++ also wip petprojects"
+               class="metro-tile tile-orange col-span-2 h-44 sm:h-48">
+              <div id="live-tile-mycat" class="live-tile-track">
+                <!-- Face 1: Project Info -->
+                <div class="live-tile-face p-4 sm:p-5 flex flex-col justify-between">
+                  <div class="relative z-10">
+                    <div class="flex items-center justify-between">
+                      <span class="px-2 py-0.5 text-[10px] font-mono uppercase tracking-widest bg-black/30 text-white/90">
+                        Codeberg // Unix Utility (WIP)
+                      </span>
+                      <span class="text-xs font-mono text-white/80">zord/mycat.git</span>
+                    </div>
+                    <h3 class="text-2xl sm:text-3xl font-light mt-2 tracking-tight">MyCat</h3>
+                    <p class="text-xs sm:text-sm text-white/90 font-normal mt-1.5 leading-relaxed">
+                      analog of cat in unix-like systems written by me on C++ (also WIP)
+                    </p>
+                  </div>
+                  <div class="metro-tile-label">
+                    <span>MyCat</span>
+                    <span class="text-[11px] opacity-85">codeberg.org/zord/mycat.git ↗</span>
+                  </div>
+                </div>
+
+                <!-- Face 2: Simulated Unix Stream Preview -->
+                <div class="live-tile-face p-4 sm:p-5 flex flex-col justify-between bg-neutral-950/80 font-mono">
+                  <div class="text-[11px] sm:text-xs leading-relaxed relative z-10">
+                    <div class="text-amber-300">$ mycat -n src/main.cpp</div>
+                    <pre class="mt-1 text-[10px] sm:text-[11px] text-white/85 overflow-hidden">1  #include &lt;iostream&gt;
+2  #include &lt;fstream&gt;
+3  // Fast stream concatenation in C++
+4  int main(int argc, char** argv) { ... }</pre>
+                  </div>
+                  <div class="metro-tile-label font-sans">
+                    <span>MyCat — Unix cat in C++</span>
+                    <span class="text-[11px] opacity-90">Open Repository ↗</span>
+                  </div>
+                </div>
+              </div>
+            </a>
+
+            <!-- MEDIUM TILE 3: Interactive README / Markdown Source Viewer -->
+            <div onclick="toggleAllAppsView(true)"
+                 data-search="readme markdown raw directory all apps source"
+                 class="metro-tile tile-steel h-32 sm:h-36 p-4 flex flex-col justify-between">
+              <div class="flex items-center justify-between relative z-10">
+                <span class="text-2xl font-light">📄</span>
+                <span class="text-[10px] font-mono uppercase px-1.5 py-0.5 bg-black/25">README.md</span>
+              </div>
+              <div class="relative z-10 my-auto">
+                <div class="text-sm font-medium">All Apps &amp; Raw View</div>
+                <div class="text-[11px] text-white/75">Directory &amp; Markdown</div>
+              </div>
+              <div class="metro-tile-label">
+                <span>Directory</span>
+                <span>↓</span>
+              </div>
+            </div>
+
+            <!-- MEDIUM TILE 4: Personalization / Metro Theme Tile -->
+            <div onclick="toggleCharmsBar('settings')"
+                 data-search="settings personalize theme accent color windows 8.1 phone"
+                 class="metro-tile tile-accent h-32 sm:h-36 p-4 flex flex-col justify-between">
+              <div class="flex items-center justify-between relative z-10">
+                <span class="text-2xl">🎨</span>
+                <span id="live-status-badge" class="text-[10px] font-mono uppercase px-1.5 py-0.5 bg-black/25">Live: ON</span>
+              </div>
+              <div class="relative z-10 my-auto">
+                <div class="text-sm font-medium">Personalize</div>
+                <div class="text-[11px] text-white/80">Accents &amp; Tile Physics</div>
+              </div>
+              <div class="metro-tile-label">
+                <span>PC Settings</span>
+                <span>⚙</span>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+      </div>
+
+      <!-- BOTTOM BAR: Iconic Windows 8.1 Downward Arrow (↓) to All Apps -->
+      <footer class="mt-8 pt-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <button onclick="toggleAllAppsView(true)"
+                  class="metro-circle-btn"
+                  title="View All Apps & Raw Markdown Directory">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="square" stroke-linejoin="miter" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+          </button>
+          <span onclick="toggleAllAppsView(true)"
+                class="text-sm font-light text-white/75 hover:text-white cursor-pointer tracking-wide">
+            Apps &amp; Raw Markdown
+          </span>
+        </div>
+
+        <div class="hidden sm:flex items-center gap-4 text-xs text-white/55 font-light">
+          <span>Tip: Hover &amp; press tiles for 3D Metro tilt</span>
+          <span>•</span>
+          <button onclick="toggleLiveTiles()" id="footer-live-toggle" class="hover:text-white underline">
+            Pause Live Tiles
+          </button>
+        </div>
+      </footer>
+
+    </main>
+
+    <!-- ======================================================================
+         SECTION 2: ALL APPS & RAW MARKDOWN VIEW (Windows 8.1 Slide-Down Screen)
+         ====================================================================== -->
+    <section id="all-apps-section" class="flex-1 flex flex-col justify-between px-5 sm:px-10 lg:px-16 pt-6 sm:pt-10 pb-8">
+      <div>
+        <!-- Top Header with Up Arrow (↑) back to Start Screen -->
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-8">
+          <div class="flex items-center gap-4">
+            <button onclick="toggleAllAppsView(false)"
+                    class="metro-circle-btn"
+                    title="Back to Start Screen">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="square" stroke-linejoin="miter" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+              </svg>
+            </button>
+            <h2 class="metro-title text-4xl sm:text-5xl text-white">Apps &amp; Raw Profile</h2>
+          </div>
+
+          <button onclick="copyMarkdownToClipboard()"
+                  id="copy-md-btn"
+                  class="px-4 py-2 text-xs sm:text-sm bg-white/15 hover:bg-white hover:text-black border border-white/30 transition-colors">
+            📋 Copy Original Markdown
+          </button>
+        </div>
+
+        <!-- Two-Column All Apps Directory + Raw Markdown Source -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+          <!-- Left 7 Cols: Categorized Metro App Directory -->
+          <div class="lg:col-span-7 space-y-6">
+            <div>
+              <div class="text-xs uppercase tracking-widest text-white/50 border-b border-white/15 pb-1 mb-3">
+                Tech Stack // Direct Links
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <a href="https://isocpp.org/" target="_blank" rel="noopener noreferrer"
+                   class="flex items-center gap-3 p-2.5 bg-white/5 hover:bg-white/15 border border-white/10 transition-colors">
+                  <div class="w-10 h-10 tile-cobalt flex items-center justify-center shrink-0 p-1.5">
+                    <img src="https://cdn.jsdelivr.net/gh/glincker/thesvg@main/public/icons/c-plusplus/default.svg" alt="cpp" class="w-full h-full object-contain" />
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium">C++</div>
+                    <div class="text-xs text-white/60">https://isocpp.org/</div>
+                  </div>
+                </a>
+
+                <a href="https://learn.microsoft.com/en-us/dotnet/csharp/" target="_blank" rel="noopener noreferrer"
+                   class="flex items-center gap-3 p-2.5 bg-white/5 hover:bg-white/15 border border-white/10 transition-colors">
+                  <div class="w-10 h-10 tile-violet flex items-center justify-center shrink-0 p-1.5">
+                    <img src="https://cdn.jsdelivr.net/gh/glincker/thesvg@main/public/icons/csharp/default.svg" alt="cs" class="w-full h-full object-contain" />
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium">C#</div>
+                    <div class="text-xs text-white/60">learn.microsoft.com/dotnet/csharp</div>
+                  </div>
+                </a>
+
+                <a href="https://flatassembler.net/" target="_blank" rel="noopener noreferrer"
+                   class="flex items-center gap-3 p-2.5 bg-white/5 hover:bg-white/15 border border-white/10 transition-colors">
+                  <div class="w-10 h-10 tile-crimson flex items-center justify-center shrink-0 p-1.5 font-mono text-xs font-bold">
+                    FASM
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium">FASM (Flat Assembler)</div>
+                    <div class="text-xs text-white/60">https://flatassembler.net/</div>
+                  </div>
+                </a>
+
+                <a href="https://nixos.org" target="_blank" rel="noopener noreferrer"
+                   class="flex items-center gap-3 p-2.5 bg-white/5 hover:bg-white/15 border border-white/10 transition-colors">
+                  <div class="w-10 h-10 tile-cyan flex items-center justify-center shrink-0 p-1.5">
+                    <img src="https://cdn.jsdelivr.net/gh/glincker/thesvg@main/public/icons/nixos/default.svg" alt="nixos" class="w-full h-full object-contain" />
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium">NixOS</div>
+                    <div class="text-xs text-white/60">https://nixos.org</div>
+                  </div>
+                </a>
+
+                <a href="https://swaywm.org" target="_blank" rel="noopener noreferrer"
+                   class="flex items-center gap-3 p-2.5 bg-white/5 hover:bg-white/15 border border-white/10 transition-colors">
+                  <div class="w-10 h-10 tile-amber flex items-center justify-center shrink-0 p-1.5">
+                    <img src="https://cdn.jsdelivr.net/gh/glincker/thesvg@main/public/icons/sway/default.svg" alt="sway" class="w-full h-full object-contain" />
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium">Sway</div>
+                    <div class="text-xs text-white/60">https://swaywm.org</div>
+                  </div>
+                </a>
+
+                <a href="https://microsoft.com/" target="_blank" rel="noopener noreferrer"
+                   class="flex items-center gap-3 p-2.5 bg-white/5 hover:bg-white/15 border border-white/10 transition-colors">
+                  <div class="w-10 h-10 tile-emerald flex items-center justify-center shrink-0 p-1.5">
+                    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/windows8/windows8-original.svg" alt="windows 10" class="w-full h-full object-contain brightness-200" />
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium">Windows</div>
+                    <div class="text-xs text-white/60">https://microsoft.com/</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+
+            <div>
+              <div class="text-xs uppercase tracking-widest text-white/50 border-b border-white/15 pb-1 mb-3">
+                Raw and experimental petprojects // Codeberg
+              </div>
+              <div class="space-y-2.5">
+                <a href="https://codeberg.org/zord/cppfetch" target="_blank" rel="noopener noreferrer"
+                   class="flex items-center justify-between p-3 bg-white/5 hover:bg-white/15 border border-white/10 transition-colors">
+                  <div>
+                    <div class="text-base font-medium text-white">CppFetch</div>
+                    <div class="text-xs text-white/75">*fetch program written by me in C++ (WIP)</div>
+                  </div>
+                  <span class="text-xs font-mono px-2 py-1 bg-blue-600/40 border border-blue-400/30">codeberg.org/zord/cppfetch ↗</span>
+                </a>
+
+                <a href="https://codeberg.org/zord/mycat.git" target="_blank" rel="noopener noreferrer"
+                   class="flex items-center justify-between p-3 bg-white/5 hover:bg-white/15 border border-white/10 transition-colors">
+                  <div>
+                    <div class="text-base font-medium text-white">MyCat</div>
+                    <div class="text-xs text-white/75">analog of cat in unix-like systems written by me on C++ (also WIP)</div>
+                  </div>
+                  <span class="text-xs font-mono px-2 py-1 bg-orange-600/40 border border-orange-400/30">codeberg.org/zord/mycat.git ↗</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right 5 Cols: Exact Raw Markdown Viewer -->
+          <div class="lg:col-span-5 bg-black/50 border border-white/20 p-4">
+            <div class="flex items-center justify-between border-b border-white/15 pb-2 mb-3">
+              <span class="text-xs font-mono uppercase tracking-wider text-white/70">README.md // Source</span>
+              <span class="text-[11px] font-mono text-teal-400">UTF-8</span>
+            </div>
+            <pre id="raw-markdown-content" class="text-xs font-mono text-white/85 whitespace-pre-wrap overflow-x-auto leading-relaxed select-text"># Σύνεσις (or zord)
+
+## Tech Stack
+
+- C++ (https://isocpp.org/)
+- C# (https://learn.microsoft.com/en-us/dotnet/csharp/)
+- FASM (https://flatassembler.net/)
+- NixOS (https://nixos.org)
+- Sway (https://swaywm.org)
+- Windows (https://microsoft.com/)
+
+## About Me
+
+- Developer focused on low-level systems and building practical software.
+
+- Exploring the intersection of hardware-level control (C++ / FASM) and modern application development (C#).
+
+## Raw and experimental petprojects
+- [CppFetch](https://codeberg.org/zord/cppfetch) - *fetch program written by me in C++ (WIP)
+- [MyCat](https://codeberg.org/zord/mycat.git) - analog of cat in unix-like systems written by me on C++ (also WIP)</pre>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- WINDOWS PHONE 8.1 BOTTOM CAPACITIVE NAVIGATION BAR (Visible in WP8.1 mode) -->
+    <div class="wp8-only bg-black py-3 px-10 flex items-center justify-around border-t border-white/15">
+      <button onclick="toggleAllAppsView(false)" class="text-white/80 hover:text-white text-xl" title="Back">
+        ←
+      </button>
+      <button onclick="resetToStart()" class="text-white hover:text-teal-400 text-xl font-bold" title="Start (Windows Button)">
+        ⊞
+      </button>
+      <button onclick="toggleCharmsBar()" class="text-white/80 hover:text-white text-lg" title="Search & Settings">
+        🔍
+      </button>
+    </div>
+
+  </div>
+
+  <!-- ========================================================================
+       AUTHENTIC WINDOWS 8.1 CHARMS BAR (Right Edge Overlay + Bottom-Left Clock)
+       ======================================================================== -->
+  <div id="charms-backdrop"
+       onclick="closeCharmsBar()"
+       class="fixed inset-0 bg-black/40 z-40 hidden opacity-0 transition-opacity duration-300"></div>
+
+  <!-- Windows 8.1 Iconic Bottom-Left Time & Date Toast when Charms is active -->
+  <div id="charms-clock-box"
+       class="fixed bottom-10 left-10 z-50 bg-neutral-900/95 border border-white/15 px-7 py-5 hidden pointer-events-none">
+    <div class="flex items-center gap-6">
+      <div id="charms-time" class="metro-title text-6xl text-white">12:00</div>
+      <div class="leading-snug">
+        <div id="charms-day" class="text-lg font-light text-white">Wednesday</div>
+        <div id="charms-date" class="text-sm font-light text-white/70">October 21</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right-side Charms Bar & Personalization Flyout -->
+  <aside id="charms-drawer"
+         class="fixed top-0 right-0 h-full w-80 sm:w-96 bg-neutral-950/95 border-l border-white/20 z-50 translate-x-full transition-transform duration-300 flex flex-col justify-between p-6 text-white overflow-y-auto">
+    <div>
+      <div class="flex items-center justify-between border-b border-white/15 pb-4 mb-6">
+        <div>
+          <h3 class="text-2xl font-light tracking-tight">Personalize &amp; Charms</h3>
+          <p class="text-xs text-white/60">Windows 8.1 / Windows Phone 8.1 Settings</p>
+        </div>
+        <button onclick="closeCharmsBar()" class="w-8 h-8 flex items-center justify-center bg-white/10 hover:bg-white hover:text-black">
+          ✕
+        </button>
+      </div>
+
+      <!-- Charm Quick Actions -->
+      <div class="grid grid-cols-3 gap-2 mb-6">
+        <button onclick="resetToStart(); closeCharmsBar();"
+                class="p-3 bg-white/5 hover:bg-white/15 border border-white/10 flex flex-col items-center gap-1 text-xs">
+          <span class="text-lg">⊞</span>
+          <span>Start</span>
+        </button>
+        <button onclick="toggleAllAppsView(true); closeCharmsBar();"
+                class="p-3 bg-white/5 hover:bg-white/15 border border-white/10 flex flex-col items-center gap-1 text-xs">
+          <span class="text-lg">↓</span>
+          <span>All Apps</span>
+        </button>
+        <button onclick="toggleLayoutMode();"
+                class="p-3 bg-white/5 hover:bg-white/15 border border-white/10 flex flex-col items-center gap-1 text-xs">
+          <span class="text-lg">📱</span>
+          <span>WP8 / Win8</span>
+        </button>
+      </div>
+
+      <!-- 1. Background Color Picker -->
+      <div class="mb-6">
+        <label class="block text-xs uppercase tracking-widest text-white/60 mb-2.5">
+          Start Screen Background
+        </label>
+        <div class="grid grid-cols-5 gap-2">
+          <button onclick="setBackground('#180028')" class="h-10 border-2 border-white/40" style="background:#180028" title="Win 8.1 Aubergine"></button>
+          <button onclick="setBackground('#001e36')" class="h-10 border-2 border-white/40" style="background:#001e36" title="Midnight Blue"></button>
+          <button onclick="setBackground('#0b2420')" class="h-10 border-2 border-white/40" style="background:#0b2420" title="Deep Emerald"></button>
+          <button onclick="setBackground('#1d1d1d')" class="h-10 border-2 border-white/40" style="background:#1d1d1d" title="Charcoal Slate"></button>
+          <button onclick="setBackground('#000000')" class="h-10 border-2 border-white/40" style="background:#000000" title="Lumia OLED Pure Black"></button>
+        </div>
+      </div>
+
+      <!-- 2. Accent Color Swatches -->
+      <div class="mb-6">
+        <label class="block text-xs uppercase tracking-widest text-white/60 mb-2.5">
+          Metro Accent Color
+        </label>
+        <div class="grid grid-cols-4 gap-2">
+          <button onclick="setAccent('#00aba9')" class="h-10 border border-white/30 flex items-end p-1 text-[10px]" style="background:#00aba9">Teal</button>
+          <button onclick="setAccent('#0050ef')" class="h-10 border border-white/30 flex items-end p-1 text-[10px]" style="background:#0050ef">Cobalt</button>
+          <button onclick="setAccent('#a20025')" class="h-10 border border-white/30 flex items-end p-1 text-[10px]" style="background:#a20025">Crimson</button>
+          <button onclick="setAccent('#6a00ff')" class="h-10 border border-white/30 flex items-end p-1 text-[10px]" style="background:#6a00ff">Indigo</button>
+          <button onclick="setAccent('#008a00')" class="h-10 border border-white/30 flex items-end p-1 text-[10px]" style="background:#008a00">Emerald</button>
+          <button onclick="setAccent('#fa6800')" class="h-10 border border-white/30 flex items-end p-1 text-[10px]" style="background:#fa6800">Orange</button>
+          <button onclick="setAccent('#d80073')" class="h-10 border border-white/30 flex items-end p-1 text-[10px]" style="background:#d80073">Magenta</button>
+          <button onclick="setAccent('#647687')" class="h-10 border border-white/30 flex items-end p-1 text-[10px]" style="background:#647687">Steel</button>
+        </div>
+      </div>
+
+      <!-- 3. Tile Color Mode & Toggles -->
+      <div class="space-y-3 border-t border-white/15 pt-4">
+        <label class="flex items-center justify-between cursor-pointer py-1">
+          <span class="text-sm font-light">Unified WP8.1 Accent Tiles</span>
+          <input type="checkbox" id="toggle-unified-accent" onchange="toggleUnifiedAccent(this.checked)" class="w-4 h-4 accent-teal-500" />
+        </label>
+
+        <label class="flex items-center justify-between cursor-pointer py-1">
+          <span class="text-sm font-light">Translucent Glass Tiles</span>
+          <input type="checkbox" id="toggle-glass-tiles" onchange="toggleGlassTiles(this.checked)" class="w-4 h-4 accent-teal-500" />
+        </label>
+
+        <label class="flex items-center justify-between cursor-pointer py-1">
+          <span class="text-sm font-light">Live Tile Animations</span>
+          <input type="checkbox" id="toggle-live-anim" checked onchange="toggleLiveTiles(this.checked)" class="w-4 h-4 accent-teal-500" />
+        </label>
+      </div>
+    </div>
+
+    <div class="border-t border-white/15 pt-4 text-xs text-white/50 flex items-center justify-between">
+      <span>Σύνεσις (or zord)</span>
+      <span>Metro UI 8.1</span>
+    </div>
+  </aside>
+
+  <!-- ========================================================================
+       METRO MODAL: PROFILE & ABOUT ME INSPECTOR
+       ======================================================================== -->
+  <div id="profile-modal"
+       onclick="if(event.target === this) closeProfileModal()"
+       class="fixed inset-0 bg-black/75 z-50 hidden items-center justify-center p-4">
+    <div class="bg-[#1b0b2e] border-2 border-white/35 max-w-2xl w-full p-6 sm:p-8 text-white shadow-2xl relative">
+      <div class="flex items-start justify-between gap-4 border-b border-white/15 pb-5">
+        <div class="flex items-center gap-4">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTT80dNlNLXB-fl7D-tVpbnG67cY92yjxDbz3D4sD8nx6xECYagnixSdRQ&s=10"
+               alt="Σύνεσις"
+               onerror="this.src='https://placehold.co/100x100/180028/ffffff?text=zord'"
+               class="w-16 h-16 object-cover border border-white/40" />
+          <div>
+            <h2 class="metro-title text-3xl sm:text-4xl">Σύνεσις <span class="text-white/65 text-2xl">(or zord)</span></h2>
+            <p class="text-xs uppercase tracking-widest text-teal-300 mt-1">Low-Level Systems &amp; Practical Software</p>
+          </div>
+        </div>
+        <button onclick="closeProfileModal()" class="px-3 py-1 bg-white/10 hover:bg-white hover:text-black text-sm">✕</button>
+      </div>
+
+      <div class="mt-6 space-y-5">
+        <div>
+          <h3 class="text-xs uppercase tracking-widest text-white/60 mb-2">About Me</h3>
+          <ul class="space-y-2 text-sm sm:text-base font-light leading-relaxed bg-black/30 p-4 border-l-4 border-teal-400">
+            <li>• Developer focused on low-level systems and building practical software.</li>
+            <li>• Exploring the intersection of hardware-level control (C++ / FASM) and modern application development (C#).</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-xs uppercase tracking-widest text-white/60 mb-2">Raw and experimental petprojects</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <a href="https://codeberg.org/zord/cppfetch" target="_blank" rel="noopener noreferrer"
+               class="p-3 bg-blue-600/30 hover:bg-blue-600/50 border border-white/20 block transition-colors">
+              <div class="font-medium">CppFetch ↗</div>
+              <div class="text-xs text-white/80 mt-1">*fetch program written by me in C++ (WIP)</div>
+            </a>
+            <a href="https://codeberg.org/zord/mycat.git" target="_blank" rel="noopener noreferrer"
+               class="p-3 bg-orange-600/30 hover:bg-orange-600/50 border border-white/20 block transition-colors">
+              <div class="font-medium">MyCat ↗</div>
+              <div class="text-xs text-white/80 mt-1">analog of cat in unix-like systems written by me on C++ (also WIP)</div>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 pt-4 border-t border-white/15 flex justify-end gap-3">
+        <button onclick="closeProfileModal()" class="px-5 py-2 bg-white text-black text-sm font-medium hover:bg-gray-200">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       METRO MODAL: FEATURED PHOTO LIGHTBOX
+       ======================================================================== -->
+  <div id="photo-modal"
+       onclick="if(event.target === this) closePhotoModal()"
+       class="fixed inset-0 bg-black/90 z-50 hidden items-center justify-center p-4">
+    <div class="max-w-lg w-full bg-neutral-900 border border-white/30 p-4 text-white">
+      <div class="flex items-center justify-between pb-3 mb-3 border-b border-white/15">
+        <span class="text-sm font-light">Photos // Σύνεσις (or zord)</span>
+        <button onclick="closePhotoModal()" class="px-2.5 py-0.5 bg-white/10 hover:bg-white hover:text-black text-xs">✕</button>
+      </div>
+      <div class="bg-black flex items-center justify-center p-4">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTT80dNlNLXB-fl7D-tVpbnG67cY92yjxDbz3D4sD8nx6xECYagnixSdRQ&s=10"
+             alt="Σύνεσις Featured Image"
+             class="max-h-80 w-auto object-contain border border-white/20" />
+      </div>
+      <div class="mt-3 flex items-center justify-between text-xs text-white/60">
+        <span>Featured Profile Artwork</span>
+        <a href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTT80dNlNLXB-fl7D-tVpbnG67cY92yjxDbz3D4sD8nx6xECYagnixSdRQ&s=10"
+           target="_blank"
+           rel="noopener noreferrer"
+           class="text-teal-400 hover:underline">Open Original Image ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       JAVASCRIPT: 3D METRO TILT PHYSICS, LIVE TILES ENGINE & CHARMS
+       ======================================================================== -->
+  <script>
+    /* ------------------------------------------------------------------------
+       1. AUTHENTIC WINDOWS 8.1 3D PERSPECTIVE TILE TILT ENGINE
+       ------------------------------------------------------------------------ */
+    function initMetroTilePhysics() {
+      const tiles = document.querySelectorAll('.metro-tile');
+
+      tiles.forEach((tile) => {
+        tile.addEventListener('pointermove', (e) => {
+          const rect = tile.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+
+          // Subtle angle calculation matching Windows 8.1 Start Screen feel
+          const rotateX = ((y - centerY) / centerY) * -6.5;
+          const rotateY = ((x - centerX) / centerX) * 6.5;
+
+          tile.style.transform = `perspective(650px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(0.992, 0.992, 1)`;
+        });
+
+        tile.addEventListener('pointerdown', (e) => {
+          const rect = tile.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+
+          const rotateX = ((y - centerY) / centerY) * -11;
+          const rotateY = ((x - centerX) / centerX) * 11;
+
+          tile.style.transform = `perspective(650px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(0.965, 0.965, 1)`;
+        });
+
+        const resetTile = () => {
+          tile.style.transform = 'perspective(650px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+        };
+
+        tile.addEventListener('pointerup', resetTile);
+        tile.addEventListener('pointerleave', resetTile);
+      });
+    }
+
+    /* ------------------------------------------------------------------------
+       2. LIVE TILES ANIMATION ENGINE (About Me, CppFetch, MyCat)
+       ------------------------------------------------------------------------ */
+    let liveTilesEnabled = true;
+    const liveTileStates = {
+      about: { el: null, index: 0, count: 3 },
+      cppfetch: { el: null, index: 0, count: 2 },
+      mycat: { el: null, index: 0, count: 2 }
+    };
+
+    function stepLiveTile(key) {
+      if (!liveTilesEnabled) return;
+      const item = liveTileStates[key];
+      if (!item || !item.el) return;
+
+      item.index = (item.index + 1) % item.count;
+      const offsetPercent = item.index * -100;
+      item.el.style.transform = `translateY(${offsetPercent}%)`;
+    }
+
+    function initLiveTiles() {
+      liveTileStates.about.el = document.getElementById('live-tile-about');
+      liveTileStates.cppfetch.el = document.getElementById('live-tile-cppfetch');
+      liveTileStates.mycat.el = document.getElementById('live-tile-mycat');
+
+      // Staggered intervals so Live Tiles feel organic like Windows 8.1
+      setInterval(() => stepLiveTile('about'), 5400);
+      setInterval(() => stepLiveTile('cppfetch'), 6800);
+      setInterval(() => stepLiveTile('mycat'), 7600);
+    }
+
+    function toggleLiveTiles(forceState) {
+      liveTilesEnabled = typeof forceState === 'boolean' ? forceState : !liveTilesEnabled;
+
+      const checkbox = document.getElementById('toggle-live-anim');
+      if (checkbox) checkbox.checked = liveTilesEnabled;
+
+      const badge = document.getElementById('live-status-badge');
+      if (badge) badge.textContent = liveTilesEnabled ? 'Live: ON' : 'Live: PAUSED';
+
+      const footerBtn = document.getElementById('footer-live-toggle');
+      if (footerBtn) footerBtn.textContent = liveTilesEnabled ? 'Pause Live Tiles' : 'Resume Live Tiles';
+
+      if (!liveTilesEnabled) {
+        Object.keys(liveTileStates).forEach((k) => {
+          if (liveTileStates[k].el) {
+            liveTileStates[k].index = 0;
+            liveTileStates[k].el.style.transform = 'translateY(0%)';
+          }
+        });
+      }
+    }
+
+    /* ------------------------------------------------------------------------
+       3. SEARCH & FILTER TILES
+       ------------------------------------------------------------------------ */
+    function filterTiles(query) {
+      const q = (query || '').trim().toLowerCase();
+      const tiles = document.querySelectorAll('.metro-tile');
+      const clearBtn = document.getElementById('clear-search-btn');
+
+      if (clearBtn) {
+        clearBtn.classList.toggle('hidden', q.length === 0);
+      }
+
+      tiles.forEach((tile) => {
+        const keywords = (tile.getAttribute('data-search') || '') + ' ' + tile.innerText.toLowerCase();
+        if (!q || keywords.includes(q)) {
+          tile.classList.remove('tile-dimmed');
+        } else {
+          tile.classList.add('tile-dimmed');
+        }
+      });
+    }
+
+    function clearSearch() {
+      const input = document.getElementById('quick-search-input');
+      if (input) {
+        input.value = '';
+        filterTiles('');
+      }
+    }
+
+    /* ------------------------------------------------------------------------
+       4. LAYOUT SWITCHER (WINDOWS 8.1 START SCREEN vs WINDOWS PHONE 8.1 LUMIA)
+       ------------------------------------------------------------------------ */
+    let isWP8Mode = false;
+
+    function toggleLayoutMode() {
+      isWP8Mode = !isWP8Mode;
+      document.body.classList.toggle('wp8-mode', isWP8Mode);
+
+      const wrapper = document.getElementById('tile-groups-wrapper');
+      const icon = document.getElementById('layout-mode-icon');
+      const text = document.getElementById('layout-mode-text');
+
+      if (isWP8Mode) {
+        wrapper.classList.remove('lg:grid-cols-12');
+        wrapper.classList.add('lg:grid-cols-1');
+        document.querySelectorAll('#tile-groups-wrapper > section').forEach((sec) => {
+          sec.classList.remove('lg:col-span-4');
+        });
+        if (icon) icon.textContent = '📱';
+        if (text) text.textContent = 'WP 8.1 Mode';
+      } else {
+        wrapper.classList.add('lg:grid-cols-12');
+        wrapper.classList.remove('lg:grid-cols-1');
+        document.querySelectorAll('#tile-groups-wrapper > section').forEach((sec) => {
+          sec.classList.add('lg:col-span-4');
+        });
+        if (icon) icon.textContent = '💻';
+        if (text) text.textContent = 'Win 8.1 View';
+      }
+    }
+
+    /* ------------------------------------------------------------------------
+       5. ALL APPS & RAW MARKDOWN DIRECTORY SLIDE VIEW
+       ------------------------------------------------------------------------ */
+    function toggleAllAppsView(showApps) {
+      document.body.classList.toggle('show-all-apps', showApps);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function resetToStart() {
+      toggleAllAppsView(false);
+      clearSearch();
+    }
+
+    function cycleHeaderTitle() {
+      const el = document.getElementById('main-screen-title');
+      if (!el) return;
+      el.textContent = el.textContent.trim() === 'Start' ? 'Σύνεσις' : 'Start';
+    }
+
+    /* ------------------------------------------------------------------------
+       6. WINDOWS 8.1 CHARMS BAR, CLOCK & PERSONALIZATION
+       ------------------------------------------------------------------------ */
+    function updateMetroClock() {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const mins = String(now.getMinutes()).padStart(2, '0');
+      const timeStr = `${hours}:${mins}`;
+
+      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+      const charmsTime = document.getElementById('charms-time');
+      const charmsDay = document.getElementById('charms-day');
+      const charmsDate = document.getElementById('charms-date');
+      const wp8Clock = document.getElementById('wp8-clock');
+
+      if (charmsTime) charmsTime.textContent = timeStr;
+      if (charmsDay) charmsDay.textContent = days[now.getDay()];
+      if (charmsDate) charmsDate.textContent = `${months[now.getMonth()]} ${now.getDate()}`;
+      if (wp8Clock) wp8Clock.textContent = timeStr;
+    }
+
+    function toggleCharmsBar() {
+      const drawer = document.getElementById('charms-drawer');
+      const isHidden = drawer.classList.contains('translate-x-full');
+      if (isHidden) {
+        openCharmsBar();
+      } else {
+        closeCharmsBar();
+      }
+    }
+
+    function openCharmsBar() {
+      updateMetroClock();
+      const drawer = document.getElementById('charms-drawer');
+      const backdrop = document.getElementById('charms-backdrop');
+      const clockBox = document.getElementById('charms-clock-box');
+
+      backdrop.classList.remove('hidden');
+      setTimeout(() => backdrop.classList.remove('opacity-0'), 10);
+      drawer.classList.remove('translate-x-full');
+      clockBox.classList.remove('hidden');
+    }
+
+    function closeCharmsBar() {
+      const drawer = document.getElementById('charms-drawer');
+      const backdrop = document.getElementById('charms-backdrop');
+      const clockBox = document.getElementById('charms-clock-box');
+
+      drawer.classList.add('translate-x-full');
+      backdrop.classList.add('opacity-0');
+      clockBox.classList.add('hidden');
+      setTimeout(() => backdrop.classList.add('hidden'), 300);
+    }
+
+    function setBackground(hex) {
+      document.documentElement.style.setProperty('--metro-bg', hex);
+    }
+
+    function setAccent(hex) {
+      document.documentElement.style.setProperty('--metro-accent', hex);
+    }
+
+    function toggleUnifiedAccent(enabled) {
+      document.body.classList.toggle('unified-accent', enabled);
+    }
+
+    function toggleGlassTiles(enabled) {
+      document.body.classList.toggle('glass-tiles', enabled);
+    }
+
+    /* ------------------------------------------------------------------------
+       7. MODALS & CLIPBOARD HELPER
+       ------------------------------------------------------------------------ */
+    function openProfileModal() {
+      const modal = document.getElementById('profile-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeProfileModal() {
+      const modal = document.getElementById('profile-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function openPhotoModal() {
+      const modal = document.getElementById('photo-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closePhotoModal() {
+      const modal = document.getElementById('photo-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function copyMarkdownToClipboard() {
+      const rawText = document.getElementById('raw-markdown-content').innerText;
+      const textarea = document.createElement('textarea');
+      textarea.value = rawText;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+
+      const btn = document.getElementById('copy-md-btn');
+      if (btn) {
+        const original = btn.innerText;
+        btn.innerText = '✓ Copied to Clipboard!';
+        setTimeout(() => { btn.innerText = original; }, 2000);
+      }
+    }
+
+    /* Initialize everything on window load */
+    window.onload = function () {
+      initMetroTilePhysics();
+      initLiveTiles();
+      updateMetroClock();
+      setInterval(updateMetroClock, 15000);
+
+      // Right-edge hot corner click/hover support
+      const hotcorner = document.getElementById('charms-hotcorner');
+      if (hotcorner) {
+        hotcorner.addEventListener('click', openCharmsBar);
+      }
+
+      // Escape key closes modals or Charms bar
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeCharmsBar();
+          closeProfileModal();
+          closePhotoModal();
+        }
+      });
+    };
+  </script>
+</body>
+</html>
