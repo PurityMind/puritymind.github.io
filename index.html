@@ -1,73 +1,512 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <link rel="icon" type="image/x-icon" href="images.ico">
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="icon" type="image/x-icon" href="https://puritymind.github.io/images.ico">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Σύνεσις (or zord)</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+
   <style>
-    body { background: #0d0d0d; color: #dcdcdc; font-family: monospace; line-height: 1.6; max-width: 650px; margin: 40px auto; padding: 0 16px; }
-    a { color: #5af; text-decoration: underline; }
-    a:hover { color: #fff; background: #005577; text-decoration: none; }
-    h1, h2 { font-weight: bold; margin-top: 1.8em; margin-bottom: 0.6em; }
-    img { vertical-align: middle; }
-    hr { border: 0; border-top: 1px dashed #333; margin: 36px 0 28px; }
-    p, ul { margin: 12px 0; }
-    li { margin-bottom: 8px; }
+    :root {
+      --bg: #0d0d0d;
+      --fg: #dcdcdc;
+      --accent: #5af;
+      --accent-hover: #005577;
+      --border: #2a2a2a;
+      --border-dashed: #333;
+      --muted: #888;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
+      line-height: 1.6;
+      max-width: 650px;
+      margin: 40px auto;
+      padding: 0 16px;
+      position: relative;
+    }
+
+    #snow-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: underline;
+      transition: color 0.15s ease, background 0.15s ease;
+    }
+
+    a:hover {
+      color: #fff;
+      background: var(--accent-hover);
+      text-decoration: none;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-weight: bold;
+      margin-top: 1.6em;
+      margin-bottom: 0.5em;
+    }
+
+    h3 {
+      color: #aaa;
+      font-size: 1rem;
+    }
+
+    .cursor {
+      display: inline-block;
+      color: var(--accent);
+      animation: blink 1s step-start infinite;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    img {
+      vertical-align: middle;
+    }
+
+    .tech-link {
+      display: inline-block;
+      text-decoration: none;
+      margin-right: 8px;
+      margin-bottom: 6px;
+    }
+
+    .tech-fallback {
+      display: inline-block;
+      padding: 2px 6px;
+      border: 1px solid var(--border);
+      background: #141414;
+      font-size: 0.85rem;
+      color: var(--fg);
+    }
+
+    .tech-link:hover .tech-fallback {
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    hr {
+      border: 0;
+      border-top: 1px dashed var(--border-dashed);
+      margin: 36px 0 28px;
+    }
+
+    p,
+    ul {
+      margin: 12px 0;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    .tabs-nav {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin: 20px 0 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px dashed var(--border-dashed);
+      overflow-x: auto;
+      white-space: nowrap;
+      scrollbar-width: none;
+    }
+
+    .tabs-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab-btn {
+      background: #161616;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.9rem;
+      padding: 3px 8px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.15s ease;
+      user-select: none;
+      flex-shrink: 0;
+    }
+
+    .tab-btn:hover {
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .tab-btn.active {
+      color: #0d0d0d;
+      background: var(--accent);
+      border-color: var(--accent);
+      font-weight: bold;
+    }
+
+    .tab-btn:focus-visible,
+    #snow-toggle:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .nav-right {
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+
+    .snow-btn {
+      font-size: 0.85rem;
+      border-style: dotted;
+    }
+
+    .tab-pane {
+      display: none;
+    }
+
+    .tab-pane.active {
+      display: block;
+      animation: fadeIn 0.15s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(2px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .key-hint {
+      color: #555;
+      font-size: 0.75rem;
+      margin-left: 2px;
+    }
+
+    .friend-favicon {
+      width: 16px;
+      height: 16px;
+      vertical-align: -2px;
+      margin-right: 6px;
+      border-radius: 2px;
+      display: inline-block;
+    }
+
+    #math-age {
+      cursor: help;
+      border-bottom: 1px dotted var(--muted);
+      display: inline-block;
+      margin-left: 2px;
+    }
   </style>
 </head>
+
 <body>
 
-  <h1># Σύνεσις (or zord)</h1>
+  <canvas id="snow-canvas"></canvas>
 
-  <h2>## Tech Stack</h2>
-  <p>
-    <a href="https://isocpp.org/">
-      <img src="https://cdn.jsdelivr.net/gh/glincker/thesvg@main/public/icons/c-plusplus/default.svg" height="28" alt="cpp">
-    </a>
-    &nbsp;&nbsp;
-    <a href="https://learn.microsoft.com/en-us/dotnet/csharp/">
-      <img src="https://cdn.jsdelivr.net/gh/glincker/thesvg@main/public/icons/csharp/default.svg" height="28" alt="cs">
-    </a>
-    &nbsp;&nbsp;
-    <a href="https://flatassembler.net/">
-      <img src="https://codeberg.org/zord/.profile/raw/branch/main/media/FASM.png" height="28" alt="[FASM]">
-    </a>
-    &nbsp;&nbsp;
-    <a href="https://nixos.org">
-      <img src="https://cdn.jsdelivr.net/gh/glincker/thesvg@main/public/icons/nixos/default.svg" height="28" alt="nixos">
-    </a>
-    &nbsp;&nbsp;
-    <a href="https://swaywm.org">
-      <img src="https://cdn.jsdelivr.net/gh/glincker/thesvg@main/public/icons/sway/default.svg" height="28" alt="sway">
-    </a>
-    &nbsp;&nbsp;
-    <a href="https://microsoft.com/">
-      <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/windows8/windows8-original.svg" height="28" alt="windows 10">
-    </a>
-  </p>
+  <h1># Σύνεσις (or zord)<span class="cursor">_</span></h1>
 
-  <h2>## About Me</h2>
-  <ul>
-    <li>Developer focused on low-level systems and building practical software.</li>
-    <li>Exploring the intersection of hardware-level control (C++ / FASM) and modern application development (C#).</li>
-  </ul>
+  <nav class="tabs-nav" role="tablist">
+    <button class="tab-btn active" data-tab="main" onclick="switchTab('main')" role="tab" aria-selected="true">[ main
+      <span class="key-hint">1</span> ]</button>
+    <button class="tab-btn" data-tab="about" onclick="switchTab('about')" role="tab" aria-selected="false">[ about <span
+        class="key-hint">2</span> ]</button>
+    <button class="tab-btn" data-tab="setup" onclick="switchTab('setup')" role="tab" aria-selected="false">[ setup <span
+        class="key-hint">3</span> ]</button>
+    <button class="tab-btn" data-tab="friends" onclick="switchTab('friends')" role="tab" aria-selected="false">[ friends
+      <span class="key-hint">4</span> ]</button>
 
-  <h2>## Raw and experimental petprojects</h2>
-  <ul>
-    <li>
-      <a href="https://codeberg.org/zord/cppfetch"><b>CppFetch</b></a> - <i>fetch program written by me in C++ (WIP)</i>
-    </li>
-    <li>
-      <a href="https://codeberg.org/zord/mycat.git"><b>MyCat</b></a> - <i>analog of cat in unix-like systems written by me on C++ (also WIP)</i>
-    </li>
-  </ul>
+    <div class="nav-right">
+      <button id="snow-toggle" class="tab-btn snow-btn" onclick="toggleSnow()" title="Toggle snow animation">[ ❄ on
+        ]</button>
+    </div>
+  </nav>
+
+  <div id="main" class="tab-pane active" role="tabpanel">
+    <h2>## Tech Stack</h2>
+    <p>
+      <a class="tech-link" href="https://isocpp.org/">
+        <img src="%CE%A3%CF%8D%CE%BD%CE%B5%CF%83%CE%B9%CF%82%20(or%20zord)_files/default_002_gMGw.svg" height="28"
+          alt="cpp" onerror="this.outerHTML='<span class=\'tech-fallback\'>[C++]</span>'">
+      </a>
+      <a class="tech-link" href="https://learn.microsoft.com/en-us/dotnet/csharp/">
+        <img src="%CE%A3%CF%8D%CE%BD%CE%B5%CF%83%CE%B9%CF%82%20(or%20zord)_files/default_003_gMGw.svg" height="28"
+          alt="cs" onerror="this.outerHTML='<span class=\'tech-fallback\'>[C#]</span>'">
+      </a>
+      <a class="tech-link" href="https://flatassembler.net/">
+        <img src="%CE%A3%CF%8D%CE%BD%CE%B5%CF%83%CE%B9%CF%82%20(or%20zord)_files/FASM_gMGw.png" height="28" alt="[FASM]"
+          onerror="this.outerHTML='<span class=\'tech-fallback\'>[FASM]</span>'">
+      </a>
+      <a class="tech-link" href="https://nixos.org/">
+        <img src="%CE%A3%CF%8D%CE%BD%CE%B5%CF%83%CE%B9%CF%82%20(or%20zord)_files/default_gMGw.svg" height="28"
+          alt="nixos" onerror="this.outerHTML='<span class=\'tech-fallback\'>[NixOS]</span>'">
+      </a>
+      <a class="tech-link" href="https://swaywm.org/">
+        <img src="%CE%A3%CF%8D%CE%BD%CE%B5%CF%83%CE%B9%CF%82%20(or%20zord)_files/default_004_gMGw.svg" height="28"
+          alt="sway" onerror="this.outerHTML='<span class=\'tech-fallback\'>[Sway]</span>'">
+      </a>
+      <a class="tech-link" href="https://microsoft.com/">
+        <img src="%CE%A3%CF%8D%CE%BD%CE%B5%CF%83%CE%B9%CF%82%20(or%20zord)_files/windows8-original_gMGw.svg" height="28"
+          alt="windows 10" onerror="this.outerHTML='<span class=\'tech-fallback\'>[Win10]</span>'">
+      </a>
+    </p>
+
+    <h2>## Raw and experimental petprojects</h2>
+    <ul>
+      <li>
+        <a href="https://codeberg.org/zord/cppfetch"><b>CppFetch</b></a> - <i>fetch program written by me in C++
+          (WIP)</i>
+      </li>
+      <li>
+        <a href="https://codeberg.org/zord/mycat.git"><b>MyCat</b></a> - <i>analog of cat in unix-like systems written
+          by me on C++ (also WIP)</i>
+      </li>
+    </ul>
+  </div>
+
+  <div id="about" class="tab-pane" role="tabpanel">
+    <h2>## About Me</h2>
+    <ul>
+      <li><b>Age:</b> <span id="math-age" title="1 + 3 + 5 + 7 = 16"></span></li>
+      <li>Political views: Sovereign Dirigism</li>
+      <li>Developer focused on low-level systems, low-overhead tools, and building practical software.</li>
+      <li>Exploring the intersection of hardware-level control (C++ / FASM) and modern application development (C#).
+      </li>
+    </ul>
+  </div>
+
+  <div id="setup" class="tab-pane" role="tabpanel">
+    <h2>## My Setup</h2>
+
+    <h3>### Hardware & Gear</h3>
+    <ul>
+      <li><b>Machine:</b> Sony VAIO SVE1711G1R (2012) with broken descriptor in SPI</li>
+    </ul>
+
+    <h3>### System & Environment</h3>
+    <ul>
+      <li><b>OS:</b> NixOS </li>
+      <li><b>WM / Compositor:</b> Sway / Niri (Wayland)</li>
+      <li><b>Terminal:</b> Alacritty</li>
+      <li><b>Shell:</b> Bash / Zsh</li>
+    </ul>
+
+    <h3>### Workflow & Tools</h3>
+    <ul>
+      <li><b>Editor:</b> Neovim, VS Code</li>
+      <li><b>Assembler:</b> FASM / NASM (x86-64)</li>
+      <li><b>Compiler & Build:</b> GCC, Clang, Make, CMake</li>
+      <li><b>VCS:</b> <a href="https://codeberg.org/zord"><b>Codeberg</b></a> </li>
+    </ul>
+  </div>
+
+  <div id="friends" class="tab-pane" role="tabpanel">
+    <h2>## Friends & Webring</h2>
+    <p>Cool people:</p>
+    <ul>
+      <li>
+        <a href="https://meltude.me/"><b>Meltude</b></a>
+      </li>
+      <li>
+        <a href="https://codeberg.org/verex"><b>Verex</b></a>
+      </li>
+    </ul>
+  </div>
 
   <hr>
 
-  <p style="text-align: center;">
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTT80dNlNLXB-fl7D-tVpbnG67cY92yjxDbz3D4sD8nx6xECYagnixSdRQ&s=10" alt="pic">
-  </p>
+  <script>
+    const TABS = ['main', 'about', 'setup', 'friends'];
+
+    function switchTab(tabId) {
+      if (!TABS.includes(tabId)) return;
+
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn[data-tab]').forEach(el => {
+        el.classList.remove('active');
+        el.setAttribute('aria-selected', 'false');
+      });
+
+      const targetPane = document.getElementById(tabId);
+      const targetBtn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+
+      if (targetPane && targetBtn) {
+        targetPane.classList.add('active');
+        targetBtn.classList.add('active');
+        targetBtn.setAttribute('aria-selected', 'true');
+        history.replaceState(null, null, '#' + tabId);
+      }
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+
+      const currentIdx = TABS.indexOf(window.location.hash.replace('#', '') || 'main');
+
+      if (['1', '2', '3', '4'].includes(e.key)) {
+        switchTab(TABS[parseInt(e.key, 10) - 1]);
+      } else if (e.key === 'ArrowRight' || e.key === 'l') {
+        const nextIdx = (currentIdx + 1) % TABS.length;
+        switchTab(TABS[nextIdx]);
+      } else if (e.key === 'ArrowLeft' || e.key === 'h') {
+        const prevIdx = (currentIdx - 1 + TABS.length) % TABS.length;
+        switchTab(TABS[prevIdx]);
+      }
+    });
+
+    function initFriendFavicons() {
+      const friendLinks = document.querySelectorAll('#friends li a');
+      friendLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (!href || href === '#' || href.startsWith('javascript:')) return;
+
+        try {
+          const url = new URL(href, window.location.href);
+          const host = url.hostname.toLowerCase();
+
+          if (host === 'codeberg.org' || host.endsWith('.codeberg.org')) {
+            return;
+          }
+
+          const img = document.createElement('img');
+          img.className = 'friend-favicon';
+          img.src = `https://www.google.com/s2/favicons?domain=${host}&sz=32`;
+          img.alt = '';
+          img.loading = 'lazy';
+          img.onerror = () => img.remove();
+
+          link.prepend(img);
+        } catch (e) { }
+      });
+    }
+
+    function initKaTeX() {
+      const mathAge = document.getElementById('math-age');
+      if (mathAge && typeof katex !== 'undefined') {
+        katex.render("\\sum_{k=1}^{4} (2k - 1)", mathAge, {
+          throwOnError: false
+        });
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash && document.getElementById(hash)) {
+        switchTab(hash);
+      }
+      initFriendFavicons();
+
+      if (typeof katex !== 'undefined') {
+        initKaTeX();
+      } else {
+        window.addEventListener('load', initKaTeX);
+      }
+    });
+
+    const canvas = document.getElementById('snow-canvas');
+    const ctx = canvas.getContext('2d');
+    const snowToggleBtn = document.getElementById('snow-toggle');
+
+    let isSnowEnabled = localStorage.getItem('snow_enabled') !== 'false';
+    let animationId = null;
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    const FLAKES_COUNT = 80;
+    const flakes = Array.from({ length: FLAKES_COUNT }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      r: Math.random() * 2 + 1,
+      speedY: Math.random() * 0.9 + 0.4,
+      speedX: Math.random() * 0.4 - 0.2,
+      opacity: Math.random() * 0.6 + 0.25,
+      swing: Math.random() * 2
+    }));
+
+    let angle = 0;
+    function renderSnow() {
+      ctx.clearRect(0, 0, width, height);
+      angle += 0.01;
+
+      for (let i = 0; i < FLAKES_COUNT; i++) {
+        const f = flakes[i];
+        f.y += f.speedY;
+        f.x += Math.sin(angle + f.swing) * 0.5 + f.speedX;
+
+        if (f.y > height) {
+          f.y = -5;
+          f.x = Math.random() * width;
+        }
+        if (f.x > width) f.x = 0;
+        if (f.x < 0) f.x = width;
+
+        ctx.beginPath();
+        ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(220, 220, 220, ${f.opacity})`;
+        ctx.fill();
+      }
+
+      if (isSnowEnabled) {
+        animationId = requestAnimationFrame(renderSnow);
+      }
+    }
+
+    function toggleSnow() {
+      isSnowEnabled = !isSnowEnabled;
+      localStorage.setItem('snow_enabled', isSnowEnabled);
+      updateSnowState();
+    }
+
+    function updateSnowState() {
+      snowToggleBtn.textContent = isSnowEnabled ? '[ ❄ on ]' : '[ ❄ off ]';
+      if (isSnowEnabled) {
+        canvas.style.display = 'block';
+        if (!animationId) animationId = requestAnimationFrame(renderSnow);
+      } else {
+        canvas.style.display = 'none';
+        if (animationId) {
+          cancelAnimationFrame(animationId);
+          animationId = null;
+        }
+        ctx.clearRect(0, 0, width, height);
+      }
+    }
+
+    updateSnowState();
+  </script>
 
 </body>
+
 </html>
